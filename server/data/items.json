@@ -1,0 +1,92 @@
+[
+  {
+    "id": "p_mki6rkeffnamf3",
+    "name": "Airphone",
+    "description": "Best item in out stock",
+    "price": 300,
+    "imageUrl": "https://tse1.mm.bing.net/th/id/OIP.uANDwatX2bWj2g22k0d3EwHaHa?rs=1&pid=ImgDetMain&o=7&rm=3",
+    "category": "Electronics",
+    "inStock": true
+  },
+  {
+    "id": "p_001",
+    "name": "Aurora Desk Lamp",
+    "description": "A warm, dimmable LED desk lamp with a minimal aluminum body.",
+    "price": 39.99,
+    "imageUrl": "/products/aurora-lamp.svg",
+    "category": "Home",
+    "inStock": true
+  },
+  {
+    "id": "p_002",
+    "name": "Trail Water Bottle",
+    "description": "Double-wall stainless bottle that keeps drinks cold for 24h.",
+    "price": 24.5,
+    "imageUrl": "/products/trail-bottle.svg",
+    "category": "Outdoors",
+    "inStock": true
+  },
+  {
+    "id": "p_003",
+    "name": "Nimbus Wireless Headphones",
+    "description": "Over-ear Bluetooth headphones with active noise cancelling.",
+    "price": 129,
+    "imageUrl": "/products/nimbus-headphones.svg",
+    "category": "Electronics",
+    "inStock": false
+  },
+  {
+    "id": "p_004",
+    "name": "Comet Running Shoes",
+    "description": "Lightweight running shoes designed for everyday training.",
+    "price": 74,
+    "imageUrl": "/products/comet-shoes.svg",
+    "category": "Fitness",
+    "inStock": true
+  },
+  {
+    "id": "p_005",
+    "name": "Breeze Cotton Throw",
+    "description": "Soft, breathable cotton throw blanket for couches and beds.",
+    "price": 29.99,
+    "imageUrl": "/products/breeze-throw.svg",
+    "category": "Home",
+    "inStock": true
+  },
+  {
+    "id": "p_006",
+    "name": "Summit Daypack 18L",
+    "description": "Compact hiking daypack with ventilated back panel and rain cover.",
+    "price": 54,
+    "imageUrl": "/products/summit-daypack.svg",
+    "category": "Outdoors",
+    "inStock": true
+  },
+  {
+    "id": "p_007",
+    "name": "Pulse Smartwatch Band",
+    "description": "Sweat-resistant silicone band compatible with most 20mm watches.",
+    "price": 14.99,
+    "imageUrl": "/products/pulse-band.svg",
+    "category": "Electronics",
+    "inStock": true
+  },
+  {
+    "id": "p_008",
+    "name": "Zen Ceramic Mug Set",
+    "description": "Set of 2 ceramic mugs with matte glaze and comfortable handle.",
+    "price": 19.5,
+    "imageUrl": "/products/zen-mugs.svg",
+    "category": "Home",
+    "inStock": false
+  },
+  {
+    "id": "p_009",
+    "name": "Core Yoga Mat 6mm",
+    "description": "Non-slip yoga mat with 6mm cushioning for joint support.",
+    "price": 32,
+    "imageUrl": "/products/core-yoga-mat.svg",
+    "category": "Fitness",
+    "inStock": true
+  }
+]
