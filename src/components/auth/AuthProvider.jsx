@@ -4,79 +4,90 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const AuthContext = createContext(null);
 
+const USERS_KEY = "users";
+const SESSION_KEY = "session";
+
 export function AuthProvider({ children }) {
   const [status, setStatus] = useState("loading"); // loading | guest | authed
   const [email, setEmail] = useState(null);
+  const [role, setRole] = useState(null);
 
-  async function loadSession() {
-    try {
-      const res = await fetch("/api/auth/session", {
-        credentials: "include",
-        cache: "no-store",
-      });
-      const data = await res.json().catch(() => ({}));
-      if (res.ok && data?.ok && data?.authed) {
-        setStatus("authed");
-        setEmail(data.email || null);
-      } else {
-        setStatus("guest");
-        setEmail(null);
-      }
-    } catch {
-      setStatus("guest");
-      setEmail(null);
-    }
-  }
-
+  // ✅ ONLY RUNS IN BROWSER
   useEffect(() => {
-    loadSession();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (typeof window === "undefined") return;
+
+    const sessionRaw = localStorage.getItem(SESSION_KEY);
+    const session = sessionRaw ? JSON.parse(sessionRaw) : null;
+
+    if (session?.email) {
+      setStatus("authed");
+      setEmail(session.email);
+      setRole(session.role || "user");
+    } else {
+      setStatus("guest");
+    }
   }, []);
 
-  async function login({ email: e, password }) {
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ email: e, password }),
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok || !data?.ok) {
-      return { ok: false, error: data?.error || "Login failed" };
+  async function register({ email, password }) {
+    if (typeof window === "undefined") {
+      return { ok: false, error: "Client only" };
     }
+
+    const users = JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
+
+    if (users.find((u) => u.email === email)) {
+      return { ok: false, error: "User already exists" };
+    }
+
+    // 🔒 FORCE USER ROLE
+    const newUser = { email, password, role: "user" };
+    users.push(newUser);
+
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    localStorage.setItem(SESSION_KEY, JSON.stringify({ email, role: "user" }));
+
     setStatus("authed");
-    setEmail(e);
+    setEmail(email);
+    setRole("user");
+
     return { ok: true };
   }
 
-  async function register({ email: e, password }) {
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ email: e, password }),
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok || !data?.ok) {
-      return { ok: false, error: data?.error || "Registration failed" };
+  async function login({ email, password }) {
+    if (typeof window === "undefined") {
+      return { ok: false, error: "Client only" };
     }
-    // auto-login after registration (cookies set server-side)
+
+    const users = JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
+    const user = users.find(
+      (u) => u.email === email && u.password === password,
+    );
+
+    if (!user) {
+      return { ok: false, error: "Invalid credentials" };
+    }
+
+    localStorage.setItem(
+      SESSION_KEY,
+      JSON.stringify({ email: user.email, role: user.role }),
+    );
+
     setStatus("authed");
-    setEmail(e);
+    setEmail(user.email);
+    setRole(user.role);
+
     return { ok: true };
   }
 
   async function logout() {
-    const res = await fetch("/api/auth/logout", {
-      method: "POST",
-      credentials: "include",
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok || !data?.ok) {
-      return { ok: false, error: data?.error || "Logout failed" };
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(SESSION_KEY);
     }
+
     setStatus("guest");
     setEmail(null);
+    setRole(null);
+
     return { ok: true };
   }
 
@@ -85,12 +96,12 @@ export function AuthProvider({ children }) {
       status,
       authed: status === "authed",
       email,
-      reload: loadSession,
-      login,
+      role,
       register,
+      login,
       logout,
     }),
-    [status, email],
+    [status, email, role],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
