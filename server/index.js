@@ -6,10 +6,12 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-app.use(cors({
-  origin: ["http://localhost:3000"],
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: ["https://first-app-two-tawny.vercel.app"],
+    credentials: true,
+  }),
+);
 app.use(express.json());
 
 const dataPath = path.join(process.cwd(), "server", "data", "items.json");
@@ -44,10 +46,18 @@ app.get("/api/items/:id", (req, res) => {
 });
 
 app.post("/api/items", (req, res) => {
-  const { name, description, price, imageUrl, category, inStock } = req.body || {};
+  const { name, description, price, imageUrl, category, inStock } =
+    req.body || {};
 
-  if (!name || !description || typeof price !== "number" || Number.isNaN(price)) {
-    return res.status(400).json({ ok: false, error: "Missing or invalid fields" });
+  if (
+    !name ||
+    !description ||
+    typeof price !== "number" ||
+    Number.isNaN(price)
+  ) {
+    return res
+      .status(400)
+      .json({ ok: false, error: "Missing or invalid fields" });
   }
 
   const items = readItems();
